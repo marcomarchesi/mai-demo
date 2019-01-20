@@ -104,7 +104,7 @@ class ImageClassificationViewController: UIViewController {
     
     /// - Tag: Compute Variety between selected images through Inception Score
     func InceptionClassification(for request: VNRequest, error: Error?) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.sync {
             guard let results = request.results else {
                 self.varietyLabel.text = "Unable to predict.\n\(error!.localizedDescription)"
                 return
@@ -144,7 +144,7 @@ class ImageClassificationViewController: UIViewController {
     
     /// - Tag: ProcessClassifications
     func Prediction(for request: VNRequest, error: Error?) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.sync {
             guard let results = request.results else {
                 self.predictionLabel.text = "Unable to predict.\n\(error!.localizedDescription)"
                 return
@@ -171,61 +171,42 @@ class ImageClassificationViewController: UIViewController {
     func compute() {
         
         // Compute predictions of aesthetical and technical scores
-        for i in 0..<images.count{
-            let orientation = CGImagePropertyOrientation(images[i].imageOrientation)
-            guard let ciImage = CIImage(image: images[i]) else { fatalError("Unable to create \(CIImage.self) from \(images[i]).") }
-            
+        DispatchQueue.global(qos: .userInitiated).async {
+            for i in 0..<self.images.count{
+                let orientation = CGImagePropertyOrientation(self.images[i].imageOrientation)
+                guard let ciImage = CIImage(image: self.images[i]) else { fatalError("Unable to create \(CIImage.self) from \(self.images[i]).") }
+
+                    let handler = VNImageRequestHandler(ciImage: ciImage, orientation: orientation)
+                    do {
+                        try handler.perform([self.PredictionRequest]) // first scores
+                    } catch {
+                        print("Failed to perform classification.\n\(error.localizedDescription)")
+                    }
+            }
+            print("Prediction DONE!")
+            //                        // Sort results
+            //                        // TODO
+            //                        // Pick best scores
+            //                        // TODO
+            // Optimize Variety within best scored images
             DispatchQueue.global(qos: .userInitiated).async {
-                let handler = VNImageRequestHandler(ciImage: ciImage, orientation: orientation)
-                do {
-                    try handler.perform([self.PredictionRequest]) // first scores
-//                    if i == (self.images.count - 1) {
-//                        print("Prediction DONE!")
-//                        // Sort results
-//                        // TODO
-//
-//                        // Pick best scores
-//                        // TODO
-//
-//
-//                        // Optimize Variety within best scored images
-//
-//                        // Calculate Inception/MobileNet Score
-//                        for i in 0..<self.images.count{  //TODO replace with proper array of images
-//                            let orientation = CGImagePropertyOrientation(self.images[i].imageOrientation)
-//                            guard let ciImage = CIImage(image: self.images[i]) else { fatalError("Unable to create \(CIImage.self) from \(self.images[i]).") }
-//
-//                            self.classificationIndex = i
-//
-//                            DispatchQueue.global(qos: .userInitiated).async {
-//                                let handler = VNImageRequestHandler(ciImage: ciImage, orientation: orientation)
-//                                do {
-//                                    try handler.perform([self.InceptionClassificationRequest]) // then variety
-//
-//                                    if i == (self.images.count - 1){
-//
-//                                        print(self.classificationPredictions.count)
-//
-//                                        // Calculate Score from Predictions
-//                                        predToScore(for: self.classificationPredictions, limit: self.limit)
-//
-//
-//                                        print("DONE!")
-//                                    }
-//                                } catch {
-//                                    print("Failed to perform classification.\n\(error.localizedDescription)")
-//                                }
-//                            }
-//                        }
-//                    }
+                // Calculate Inception/MobileNet Score
+                for i in 0..<self.images.count{  //TODO replace with proper array of images
+                    let orientation = CGImagePropertyOrientation(self.images[i].imageOrientation)
+                    guard let ciImage = CIImage(image: self.images[i]) else { fatalError("Unable to create \(CIImage.self) from \(self.images[i]).") }
                     
-                } catch {
-                    print("Failed to perform classification.\n\(error.localizedDescription)")
+                    let handler = VNImageRequestHandler(ciImage: ciImage, orientation: orientation)
+                    do {
+                        try handler.perform([self.InceptionClassificationRequest]) // then variety
+                    } catch {
+                        print("Failed to perform classification.\n\(error.localizedDescription)")
+                    }
                 }
+                
+                // Calculate Score from Predictions
+                predToScore(for: self.classificationPredictions, limit: self.limit)
+                print("DONE!")
             }
         }
-        
-
-        
     }
 }
