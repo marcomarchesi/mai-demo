@@ -204,7 +204,12 @@ class ImageClassificationViewController: UIViewController {
                 }
                 
                 // Calculate Score from Predictions
-                predToScore(for: self.classificationPredictions, limit: self.limit)
+                
+                var dummyArray:[Float] = [1.0,2.0,3.0,1.0,4.5,3.0,1.0,1.5,2.0,2.5] // 10 --> (5,2)
+                
+                print(inceptionScore(for: dummyArray, limit: self.limit))
+                print(inceptionScore(for: self.classificationPredictions, limit: self.limit))
+
                 print("DONE!")
             }
         }

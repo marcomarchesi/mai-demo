@@ -12,21 +12,59 @@ import Vision
 
 // Inception Score Implementation
 // TODO
-func predToScore(for preds: [Float], limit: Int){
+func inceptionScore(for preds: [Float], limit: Int) -> Float{
     
-    print(preds.count)
+    let categories: Int = preds.count / limit
+    var meanPreds = [Float]()
     
-//    //let's consider (5,999)
-//    var predsMean = preds           //TODO Calculate Mean over the selected images (5 by default)
-//    var kl = [Float]()
-//    for i in 0..<predsMean.count{
-//        //            kl[i] = preds[i].confidence * (log(preds[i].confidence) - log(predsMean)
-//        kl[i] = preds[i]
-//    }
-//    // sum of kl
-//    var _sum  = calculateSum(for: kl)
-//    //        var _score = calculateMean(for: )
+    for i in 0..<categories{
+        var total:Float = 0
+        for k in 0..<limit{
+            total += preds[i + k * categories]
+        }
+        total = total / Float(limit)
+        meanPreds.append(total)
+    }
     
+    var logPreds = [Float]()
+    var logMeanPreds = [Float]()
+    var index = 0
+    for i in 0..<preds.count{
+        logPreds.append(log(preds[i]))
+    }
+    
+    for i in 0..<categories{
+        logMeanPreds.append(log(meanPreds[i]))
+    }
+    
+//    print(logPreds)
+//    print(logMeanPreds)
+    
+    // calculate KL Divergence
+    var kl = [Float]()
+    for i in 0..<preds.count{
+        kl.append(preds[i] * (logPreds[i] - logMeanPreds[i % categories]))
+    }
+//    print(kl)
+    
+    var klSums = [Float]()
+    // mean of sum of kl
+    index = 0
+    var total:Float = 0.0
+    for i in 0..<preds.count{
+        total = total + kl[i]
+        index += 1
+        if index == categories{
+            index = 0
+            klSums.append(total)
+            total = 0.0
+        }
+    }
+//    print(klSums)
+    var klMean = calculateMean(for: klSums)
+//    print(klMean)
+    
+    return exp(klMean)
 }
 
 func calculateMean(for inputs:[Float]) -> Float{
