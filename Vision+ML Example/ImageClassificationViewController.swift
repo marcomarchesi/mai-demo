@@ -37,6 +37,10 @@ class ImageClassificationViewController: UIViewController {
     
     var scoreDict:Dictionary = [Int:Float]()
     var scoreIndex = 0
+    var aestheticalScoreDict:Dictionary = [Int:Float]()
+    var aestheticalScoreIndex = 0
+    var technicalScoreDict:Dictionary = [Int:Float]()
+    var technicalScoreIndex = 0
     var bestInceptionScore:Float = 0
     var bestIndexVariety:[Int] = []
     
@@ -162,28 +166,65 @@ class ImageClassificationViewController: UIViewController {
         }
     }()
     
+    // MARK: - Image Assessment
+    lazy var TechnicalPredictionRequest: VNCoreMLRequest = {
+        do {
+            /*
+             Use the Swift class `MobileNet` Core ML generates from the model.
+             To use a different Core ML classifier model, add it to the project
+             and replace `MobileNet` with that model's generated Swift class.
+             */
+            let model = try VNCoreMLModel(for: NimaTechnical().model)
+            
+            let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
+                self?.TechnicalPrediction(for: request, error: error)
+            })
+            request.imageCropAndScaleOption = .centerCrop
+            return request
+        } catch {
+            fatalError("Failed to load Vision ML model: \(error)")
+        }
+    }()
+    
     /// - Tag: ProcessClassifications
     func Prediction(for request: VNRequest, error: Error?) {
         DispatchQueue.main.sync {
             guard let results = request.results else {
-//                self.predictionLabel.text = "Unable to predict.\n\(error!.localizedDescription)"
                 return
             }
             let predictions = results as! [VNCoreMLFeatureValueObservation]
             let predictionArray = predictions[0].featureValue.multiArrayValue!
             
             scoreDict[self.scoreIndex] = calculateMeanScore(for: predictionArray)
-//            print("Mean Score is %f", calculateMeanScore(for: predictionArray))
             self.scoreIndex += 1
             
             if predictionArray.count == 0 {
-//                self.predictionLabel.text = "Nothing predicted."
             } else {
                 var preds = [String]()
                 for i in 0..<10 {
                     preds.append(String(format: "  (%.2f)", predictionArray[i].floatValue))
                 }
-//                self.predictionLabel.text = "Prediction:\n" + preds.joined(separator: "\n")
+            }
+        }
+    }
+    
+    func TechnicalPrediction(for request: VNRequest, error: Error?) {
+        DispatchQueue.main.sync {
+            guard let results = request.results else {
+                return
+            }
+            let predictions = results as! [VNCoreMLFeatureValueObservation]
+            let predictionArray = predictions[0].featureValue.multiArrayValue!
+            
+            technicalScoreDict[self.technicalScoreIndex] = calculateMeanScore(for: predictionArray)
+            self.technicalScoreIndex += 1
+            
+            if predictionArray.count == 0 {
+            } else {
+                var preds = [String]()
+                for i in 0..<10 {
+                    preds.append(String(format: "  (%.2f)", predictionArray[i].floatValue))
+                }
             }
         }
     }
@@ -205,6 +246,9 @@ class ImageClassificationViewController: UIViewController {
                     let handler = VNImageRequestHandler(ciImage: ciImage, orientation: orientation)
                     do {
                         try handler.perform([self.PredictionRequest]) // first scores
+                        try handler.perform([self.TechnicalPredictionRequest])
+                        print(self.scoreDict)
+                        print(self.scoreIndex)
                     } catch {
                         print("Failed to perform classification.\n\(error.localizedDescription)")
                     }
