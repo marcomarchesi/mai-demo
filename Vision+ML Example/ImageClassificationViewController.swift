@@ -16,11 +16,19 @@ class ImageClassificationViewController: UIViewController {
     // MARK: - IBOutlets
     
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var varietyLabel: UILabel!
-    @IBOutlet weak var predictionLabel: UILabel!
+    @IBOutlet weak var secondImageView: UIImageView!
+    @IBOutlet weak var thirdImageView: UIImageView!
+    @IBOutlet weak var fourthImageView: UIImageView!
+    @IBOutlet weak var fifthImageView: UIImageView!
+    
+    @IBOutlet weak var firstWorstImageView: UIImageView!
+    @IBOutlet weak var secondWorstImageView: UIImageView!
+    @IBOutlet weak var progressView: UIProgressView!
+//    @IBOutlet weak var varietyLabel: UILabel!
+//    @IBOutlet weak var predictionLabel: UILabel!
     
     var images:[UIImage] = []
-    var limit:Int = 11      //max number of images to be parsed
+    var limit:Int = 36      //max number of images to be parsed
     let bestImagesLimit:Int = 7  //max number of images to be selected < limit
     let shuffledImagesLimit:Int = 4 //max number of best images to be considered for maximizing the inception score
     let varietySize:Int = 5   //number of inception score loops
@@ -32,8 +40,20 @@ class ImageClassificationViewController: UIViewController {
     var bestInceptionScore:Float = 0
     var bestIndexVariety:[Int] = []
     
+    
+    // setup progressView
+    var counter:Int = 0 {
+        didSet {
+            let fractionalProgress = Float(counter) / 100.0
+            let animated = counter != 0
+            
+            progressView.setProgress(fractionalProgress, animated: animated)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         // fetch last N images from Photo Library
         self.fetchPhotos()
@@ -55,6 +75,7 @@ class ImageClassificationViewController: UIViewController {
             for i in 0..<limit{
                 fetchPhotoAtIndex(i, fetchResult)
             }
+            
         }
     }
     
@@ -104,14 +125,14 @@ class ImageClassificationViewController: UIViewController {
     func InceptionClassification(for request: VNRequest, error: Error?) {
         DispatchQueue.main.sync {
             guard let results = request.results else {
-                self.varietyLabel.text = "Unable to predict.\n\(error!.localizedDescription)"
+//                self.varietyLabel.text = "Unable to predict.\n\(error!.localizedDescription)"
                 return
             }
             // The `results` will always be `VNClassificationObservation`s, as specified by the Core ML model in this project.
             let predictions = results as! [VNClassificationObservation]
             
             if predictions.isEmpty {
-                self.varietyLabel.text = "Nothing predicted."
+//                self.varietyLabel.text = "Nothing predicted."
             } else {
                 //reset classificationPredictions
                 for i in 0..<(predictions.count) {
@@ -145,7 +166,7 @@ class ImageClassificationViewController: UIViewController {
     func Prediction(for request: VNRequest, error: Error?) {
         DispatchQueue.main.sync {
             guard let results = request.results else {
-                self.predictionLabel.text = "Unable to predict.\n\(error!.localizedDescription)"
+//                self.predictionLabel.text = "Unable to predict.\n\(error!.localizedDescription)"
                 return
             }
             let predictions = results as! [VNCoreMLFeatureValueObservation]
@@ -156,13 +177,13 @@ class ImageClassificationViewController: UIViewController {
             self.scoreIndex += 1
             
             if predictionArray.count == 0 {
-                self.predictionLabel.text = "Nothing predicted."
+//                self.predictionLabel.text = "Nothing predicted."
             } else {
                 var preds = [String]()
                 for i in 0..<10 {
                     preds.append(String(format: "  (%.2f)", predictionArray[i].floatValue))
                 }
-                self.predictionLabel.text = "Prediction:\n" + preds.joined(separator: "\n")
+//                self.predictionLabel.text = "Prediction:\n" + preds.joined(separator: "\n")
             }
         }
     }
@@ -172,6 +193,11 @@ class ImageClassificationViewController: UIViewController {
         
         // Compute predictions of aesthetical and technical scores
         DispatchQueue.global(qos: .userInitiated).async {
+            
+            DispatchQueue.main.async { [unowned self] in
+                self.counter = 30
+            }
+            
             for i in 0..<self.images.count{
                 let orientation = CGImagePropertyOrientation(self.images[i].imageOrientation)
                 guard let ciImage = CIImage(image: self.images[i]) else { fatalError("Unable to create \(CIImage.self) from \(self.images[i]).") }
@@ -184,12 +210,20 @@ class ImageClassificationViewController: UIViewController {
                     }
             }
             print("Prediction DONE!")
-            
+            DispatchQueue.main.async { [unowned self] in
+                self.counter = 60
+            }
             // Sort results
             let sortedScoreDict  = self.scoreDict.sorted(by: { $0.value > $1.value })
+            print(sortedScoreDict)
             
             // the array of indexes
             let sortedIndexes = sortedScoreDict.map { $0.key } // get the indexes of the images in order of score
+            
+            // get also the worst images
+            var worstIndexes = [Int]()
+            worstIndexes = Array(sortedIndexes.suffix(2))
+//            print(worstIndexes)
         
             // pick the best image index
             let bestImageIndex = sortedIndexes[0]
@@ -222,6 +256,10 @@ class ImageClassificationViewController: UIViewController {
                         }
                     }
                     
+                    DispatchQueue.main.async { [unowned self] in
+                        self.counter += 8
+                    }
+                    
                     // Calculate Score from Predictions
                     let lastInceptionScore = inceptionScore(for: self.classificationPredictions, limit: self.limit)
                     print(lastInceptionScore)
@@ -234,6 +272,18 @@ class ImageClassificationViewController: UIViewController {
                 print(self.bestIndexVariety)
                 print(self.bestInceptionScore)
                 print("DONE!")
+                
+                DispatchQueue.main.async { [unowned self] in
+                    self.progressView.isHidden = true
+                    print("Here the best image!")
+                    self.imageView.image = self.images[self.bestIndexVariety.last ?? 0]
+                    self.secondImageView.image = self.images[self.bestIndexVariety[0]]
+                    self.thirdImageView.image = self.images[self.bestIndexVariety[1]]
+                    self.fourthImageView.image = self.images[self.bestIndexVariety[2]]
+                    self.fifthImageView.image = self.images[self.bestIndexVariety[3]]
+                    self.firstWorstImageView.image = self.images[worstIndexes[0]]
+                    self.secondWorstImageView.image = self.images[worstIndexes[1]]
+                }
             }
         }
     }
