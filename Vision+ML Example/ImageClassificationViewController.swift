@@ -20,9 +20,17 @@ class ImageClassificationViewController: UIViewController {
     @IBOutlet weak var predictionLabel: UILabel!
     
     var images:[UIImage] = []
-    var limit:Int = 5
+    var limit:Int = 11      //max number of images to be parsed
+    let bestImagesLimit:Int = 7  //max number of images to be selected < limit
+    let shuffledImagesLimit:Int = 4 //max number of best images to be considered for maximizing the inception score
+    let varietySize:Int = 5   //number of inception score loops
     var classificationPredictions:[Float] = []
     var classificationIndex:Int = 0
+    
+    var scoreDict:Dictionary = [Int:Float]()
+    var scoreIndex = 0
+    var bestInceptionScore:Float = 0
+    var bestIndexVariety:[Int] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,16 +44,6 @@ class ImageClassificationViewController: UIViewController {
     
     func fetchPhotos () {
         // Sort the images by descending creation date and fetch the first 3
-        
-//        let albumName = "Marco"
-//        var assetCollection = PHAssetCollection()
-//        var albumFound = Bool()
-//        var photoAssets = PHFetchResult<AnyObject>()
-//        let fetchOptions = PHFetchOptions()
-//
-//        fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
-//        let collection:PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
-        
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
         fetchOptions.fetchLimit = limit
@@ -115,6 +113,7 @@ class ImageClassificationViewController: UIViewController {
             if predictions.isEmpty {
                 self.varietyLabel.text = "Nothing predicted."
             } else {
+                //reset classificationPredictions
                 for i in 0..<(predictions.count) {
                     self.classificationPredictions.append(predictions[i].confidence)
                 }
@@ -152,8 +151,9 @@ class ImageClassificationViewController: UIViewController {
             let predictions = results as! [VNCoreMLFeatureValueObservation]
             let predictionArray = predictions[0].featureValue.multiArrayValue!
             
-            calculateMeanScore(for: predictionArray)
-            print("Mean Score is %f", calculateMeanScore(for: predictionArray))
+            scoreDict[self.scoreIndex] = calculateMeanScore(for: predictionArray)
+//            print("Mean Score is %f", calculateMeanScore(for: predictionArray))
+            self.scoreIndex += 1
             
             if predictionArray.count == 0 {
                 self.predictionLabel.text = "Nothing predicted."
@@ -184,32 +184,55 @@ class ImageClassificationViewController: UIViewController {
                     }
             }
             print("Prediction DONE!")
-            //                        // Sort results
-            //                        // TODO
-            //                        // Pick best scores
-            //                        // TODO
+            
+            // Sort results
+            let sortedScoreDict  = self.scoreDict.sorted(by: { $0.value > $1.value })
+            
+            // the array of indexes
+            let sortedIndexes = sortedScoreDict.map { $0.key } // get the indexes of the images in order of score
+        
+            // pick the best image index
+            let bestImageIndex = sortedIndexes[0]
+            let selectedIndexes = sortedIndexes[1...self.bestImagesLimit]
+            
             // Optimize Variety within best scored images
             DispatchQueue.global(qos: .userInitiated).async {
-                // Calculate Inception/MobileNet Score
-                for i in 0..<self.images.count{  //TODO replace with proper array of images
-                    let orientation = CGImagePropertyOrientation(self.images[i].imageOrientation)
-                    guard let ciImage = CIImage(image: self.images[i]) else { fatalError("Unable to create \(CIImage.self) from \(self.images[i]).") }
+                
+                // loop over a number of shuffled indexes
+                for _ in 0..<self.varietySize{
                     
-                    let handler = VNImageRequestHandler(ciImage: ciImage, orientation: orientation)
-                    do {
-                        try handler.perform([self.InceptionClassificationRequest]) // then variety
-                    } catch {
-                        print("Failed to perform classification.\n\(error.localizedDescription)")
+                    // reset the inception score
+                    self.classificationPredictions.removeAll()
+                    
+                    //shuffle N-1 elements
+                    var shuffledIndexes = Array(selectedIndexes.shuffled()[0...self.shuffledImagesLimit])
+                    shuffledIndexes.append(bestImageIndex) //append the best image
+                    print(shuffledIndexes)
+                    
+                // Calculate Inception/MobileNet Score
+                    for i in shuffledIndexes{  //TODO replace with proper array of images
+                        let orientation = CGImagePropertyOrientation(self.images[i].imageOrientation)
+                        guard let ciImage = CIImage(image: self.images[i]) else { fatalError("Unable to create \(CIImage.self) from \(self.images[i]).") }
+                        
+                        let handler = VNImageRequestHandler(ciImage: ciImage, orientation: orientation)
+                        do {
+                            try handler.perform([self.InceptionClassificationRequest]) // then variety
+                        } catch {
+                            print("Failed to perform classification.\n\(error.localizedDescription)")
+                        }
                     }
+                    
+                    // Calculate Score from Predictions
+                    let lastInceptionScore = inceptionScore(for: self.classificationPredictions, limit: self.limit)
+                    print(lastInceptionScore)
+                    if lastInceptionScore > self.bestInceptionScore {
+                        self.bestIndexVariety = shuffledIndexes
+                        self.bestInceptionScore = lastInceptionScore
+                    }
+                    
                 }
-                
-                // Calculate Score from Predictions
-                
-                var dummyArray:[Float] = [1.0,2.0,3.0,1.0,4.5,3.0,1.0,1.5,2.0,2.5] // 10 --> (5,2)
-                
-                print(inceptionScore(for: dummyArray, limit: self.limit))
-                print(inceptionScore(for: self.classificationPredictions, limit: self.limit))
-
+                print(self.bestIndexVariety)
+                print(self.bestInceptionScore)
                 print("DONE!")
             }
         }

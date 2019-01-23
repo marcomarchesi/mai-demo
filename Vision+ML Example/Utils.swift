@@ -84,7 +84,7 @@ func calculateSum(for inputs:[Float]) -> Float{
 }
 
 // calculate the mean score for the aesthetical and technical score
-func calculateMeanScore(for predictionsArray:MLMultiArray) -> Double{
+func calculateMeanScore(for predictionsArray:MLMultiArray) -> Float{
     
     //normalize the predictions
     var sum:Double = 0.0
@@ -99,5 +99,5 @@ func calculateMeanScore(for predictionsArray:MLMultiArray) -> Double{
         scoreSum = scoreSum + normalizedLabels[i]
     }
     
-    return scoreSum
+    return Float(scoreSum)
 }
