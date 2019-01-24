@@ -10,6 +10,7 @@ import CoreML
 import Vision
 import ImageIO
 import Photos
+import QuartzCore
 
 
 class ImageClassificationViewController: UIViewController {
@@ -28,7 +29,7 @@ class ImageClassificationViewController: UIViewController {
 //    @IBOutlet weak var predictionLabel: UILabel!
     
     var images:[UIImage] = []
-    var limit:Int = 1000      //max number of images to be parsed
+    var limit:Int = 500      //max number of images to be parsed
     let bestImagesLimit:Int = 7  //max index among the best images to be selected < limit
     let shuffledImagesLimit:Int = 4 //max index among the best images to be considered for calculating the inception score
     let varietySize:Int = 5   //number of inception score loops
@@ -44,6 +45,8 @@ class ImageClassificationViewController: UIViewController {
     var bestInceptionScore:Float = 0
     var bestIndexVariety:[Int] = []
     
+    var start:Double = 0
+    
     
     // setup progressView
     var counter:Int = 0 {
@@ -58,12 +61,12 @@ class ImageClassificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        start = CACurrentMediaTime()
+    
         // fetch last N images from Photo Library
         self.fetchPhotos()
         // compute the images
         self.compute()
-        
     }
     
     func fetchPhotos () {
@@ -103,7 +106,6 @@ class ImageClassificationViewController: UIViewController {
         })
     }
     
-    
     // MARK: - Variety computation
     lazy var InceptionClassificationRequest: VNCoreMLRequest = {
         do {
@@ -129,14 +131,12 @@ class ImageClassificationViewController: UIViewController {
     func InceptionClassification(for request: VNRequest, error: Error?) {
         DispatchQueue.main.sync {
             guard let results = request.results else {
-//                self.varietyLabel.text = "Unable to predict.\n\(error!.localizedDescription)"
                 return
             }
             // The `results` will always be `VNClassificationObservation`s, as specified by the Core ML model in this project.
             let predictions = results as! [VNClassificationObservation]
             
             if predictions.isEmpty {
-//                self.varietyLabel.text = "Nothing predicted."
             } else {
                 //reset classificationPredictions
                 for i in 0..<(predictions.count) {
@@ -247,8 +247,6 @@ class ImageClassificationViewController: UIViewController {
                     do {
                         try handler.perform([self.AestheticalPredictionRequest]) // first scores
                         try handler.perform([self.TechnicalPredictionRequest])
-//                        print(self.scoreDict)
-//                        print(self.scoreIndex)
                     } catch {
                         print("Failed to perform classification.\n\(error.localizedDescription)")
                     }
@@ -264,7 +262,7 @@ class ImageClassificationViewController: UIViewController {
             
             // Sort results
             let sortedScoreDict  = self.scoreDict.sorted(by: { $0.value > $1.value })
-            print(sortedScoreDict)
+//            print(sortedScoreDict)
             
             // the array of indexes
             let sortedIndexes = sortedScoreDict.map { $0.key } // get the indexes of the images in order of score
@@ -318,9 +316,12 @@ class ImageClassificationViewController: UIViewController {
                     }
                     
                 }
-                print(self.bestIndexVariety)
-                print(self.bestInceptionScore)
+//                print(self.bestIndexVariety)
+//                print(self.bestInceptionScore)
                 print("DONE!")
+                
+                let end = CACurrentMediaTime()
+                print(end - self.start)
                 
                 DispatchQueue.main.async { [unowned self] in
                     self.progressView.isHidden = true

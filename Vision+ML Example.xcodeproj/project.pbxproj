@@ -15,6 +15,7 @@
 		113695D81EC1151400CA6C43 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 113695D61EC1151400CA6C43 /* LaunchScreen.storyboard */; };
 		4234AE8621F9210A00D7729D /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4234AE8521F9210A00D7729D /* StartViewController.swift */; };
 		4234AE8821F9328800D7729D /* NimaTechnical.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 4234AE8721F9328800D7729D /* NimaTechnical.mlmodel */; };
+		4234AE8A21FA73B500D7729D /* SelectImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4234AE8921FA73B500D7729D /* SelectImagesViewController.swift */; };
 		4273C13621EE8CEA00CDFA20 /* NimaAesthetic.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 4273C13521EE8CEA00CDFA20 /* NimaAesthetic.mlmodel */; };
 		42C510A621F3B8180031608C /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C510A521F3B8180031608C /* Utils.swift */; };
 		C89947DA1F4639D6005C0A19 /* MobileNet.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = C89947D91F4639A8005C0A19 /* MobileNet.mlmodel */; };
@@ -31,6 +32,7 @@
 		113695D71EC1151400CA6C43 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4234AE8521F9210A00D7729D /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		4234AE8721F9328800D7729D /* NimaTechnical.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = NimaTechnical.mlmodel; sourceTree = "<group>"; };
+		4234AE8921FA73B500D7729D /* SelectImagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectImagesViewController.swift; sourceTree = "<group>"; };
 		4273C13521EE8CEA00CDFA20 /* NimaAesthetic.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = NimaAesthetic.mlmodel; sourceTree = "<group>"; };
 		42C510A521F3B8180031608C /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		A9558E70A9563BA000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				4234AE8721F9328800D7729D /* NimaTechnical.mlmodel */,
+				4234AE8921FA73B500D7729D /* SelectImagesViewController.swift */,
 				4234AE8521F9210A00D7729D /* StartViewController.swift */,
 				42C510A521F3B8180031608C /* Utils.swift */,
 				4273C13521EE8CEA00CDFA20 /* NimaAesthetic.mlmodel */,
@@ -191,6 +194,7 @@
 				11063F621EC0EECC0033EE6D /* AppDelegate.swift in Sources */,
 				4234AE8821F9328800D7729D /* NimaTechnical.mlmodel in Sources */,
 				4273C13621EE8CEA00CDFA20 /* NimaAesthetic.mlmodel in Sources */,
+				4234AE8A21FA73B500D7729D /* SelectImagesViewController.swift in Sources */,
 				42C510A621F3B8180031608C /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
