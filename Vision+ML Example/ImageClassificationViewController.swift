@@ -28,9 +28,9 @@ class ImageClassificationViewController: UIViewController {
 //    @IBOutlet weak var predictionLabel: UILabel!
     
     var images:[UIImage] = []
-    var limit:Int = 36      //max number of images to be parsed
-    let bestImagesLimit:Int = 7  //max number of images to be selected < limit
-    let shuffledImagesLimit:Int = 4 //max number of best images to be considered for maximizing the inception score
+    var limit:Int = 1000      //max number of images to be parsed
+    let bestImagesLimit:Int = 7  //max index among the best images to be selected < limit
+    let shuffledImagesLimit:Int = 4 //max index among the best images to be considered for calculating the inception score
     let varietySize:Int = 5   //number of inception score loops
     var classificationPredictions:[Float] = []
     var classificationIndex:Int = 0
@@ -147,7 +147,7 @@ class ImageClassificationViewController: UIViewController {
     }
     
     // MARK: - Image Assessment
-    lazy var PredictionRequest: VNCoreMLRequest = {
+    lazy var AestheticalPredictionRequest: VNCoreMLRequest = {
         do {
             /*
              Use the Swift class `MobileNet` Core ML generates from the model.
@@ -157,7 +157,7 @@ class ImageClassificationViewController: UIViewController {
             let model = try VNCoreMLModel(for: NimaAesthetic().model)
             
             let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
-                self?.Prediction(for: request, error: error)
+                self?.AestheticalPrediction(for: request, error: error)
             })
             request.imageCropAndScaleOption = .centerCrop
             return request
@@ -187,7 +187,7 @@ class ImageClassificationViewController: UIViewController {
     }()
     
     /// - Tag: ProcessClassifications
-    func Prediction(for request: VNRequest, error: Error?) {
+    func AestheticalPrediction(for request: VNRequest, error: Error?) {
         DispatchQueue.main.sync {
             guard let results = request.results else {
                 return
@@ -195,8 +195,8 @@ class ImageClassificationViewController: UIViewController {
             let predictions = results as! [VNCoreMLFeatureValueObservation]
             let predictionArray = predictions[0].featureValue.multiArrayValue!
             
-            scoreDict[self.scoreIndex] = calculateMeanScore(for: predictionArray)
-            self.scoreIndex += 1
+            aestheticalScoreDict[self.aestheticalScoreIndex] = calculateMeanScore(for: predictionArray)
+            self.aestheticalScoreIndex += 1
             
             if predictionArray.count == 0 {
             } else {
@@ -245,10 +245,10 @@ class ImageClassificationViewController: UIViewController {
 
                     let handler = VNImageRequestHandler(ciImage: ciImage, orientation: orientation)
                     do {
-                        try handler.perform([self.PredictionRequest]) // first scores
+                        try handler.perform([self.AestheticalPredictionRequest]) // first scores
                         try handler.perform([self.TechnicalPredictionRequest])
-                        print(self.scoreDict)
-                        print(self.scoreIndex)
+//                        print(self.scoreDict)
+//                        print(self.scoreIndex)
                     } catch {
                         print("Failed to perform classification.\n\(error.localizedDescription)")
                     }
@@ -257,6 +257,11 @@ class ImageClassificationViewController: UIViewController {
             DispatchQueue.main.async { [unowned self] in
                 self.counter = 60
             }
+            
+            for i in 0..<self.limit{
+                self.scoreDict[i] = Float(self.technicalScoreDict[i] ?? 0) + Float( self.aestheticalScoreDict[i] ?? 0)
+            }
+            
             // Sort results
             let sortedScoreDict  = self.scoreDict.sorted(by: { $0.value > $1.value })
             print(sortedScoreDict)
