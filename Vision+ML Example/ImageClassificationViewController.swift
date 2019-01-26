@@ -25,6 +25,7 @@ class ImageClassificationViewController: UIViewController {
     @IBOutlet weak var firstWorstImageView: UIImageView!
     @IBOutlet weak var secondWorstImageView: UIImageView!
     @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet weak var progressLabel: UILabel!
 //    @IBOutlet weak var varietyLabel: UILabel!
 //    @IBOutlet weak var predictionLabel: UILabel!
     
@@ -64,6 +65,7 @@ class ImageClassificationViewController: UIViewController {
         super.viewDidLoad()
         
         start = CACurrentMediaTime()
+        self.progressLabel.text = "Loading photos..."
     
         // fetch last N images from Photo Library
         self.fetchPhotos()
@@ -76,12 +78,16 @@ class ImageClassificationViewController: UIViewController {
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
         fetchOptions.fetchLimit = limit
+        
+        
+        self.counter = 0
 
         // Fetch the image assets
         let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
 
         if fetchResult.count > 0 {
             for i in 0..<limit{
+                self.counter += 30 / fetchResult.count
                 fetchPhotoAtIndex(i, fetchResult)
             }
             
@@ -200,6 +206,8 @@ class ImageClassificationViewController: UIViewController {
             aestheticalScoreDict[self.aestheticalScoreIndex] = calculateMeanScore(for: predictionArray)
             self.aestheticalScoreIndex += 1
             
+//            print(aestheticalScoreDict)
+            
             if predictionArray.count == 0 {
             } else {
                 var preds = [String]()
@@ -237,7 +245,9 @@ class ImageClassificationViewController: UIViewController {
         // Compute predictions of aesthetical and technical scores
         DispatchQueue.global(qos: .userInitiated).async {
             
+            
             DispatchQueue.main.async { [unowned self] in
+                self.progressLabel.text = "Calculating scores..."
                 self.counter = 30
             }
             
@@ -258,16 +268,25 @@ class ImageClassificationViewController: UIViewController {
                 self.counter = 60
             }
             
-            let maxTechnicalScore = self.technicalScoreDict.keys.max()
-            let maxAestheticalScore = self.aestheticalScoreDict.keys.max()
+//            print(self.technicalScoreDict)
+//            print(self.aestheticalScoreDict)
+            
+            let maxTechnicalScore = self.technicalScoreDict.values.max()
+            let maxAestheticalScore = self.aestheticalScoreDict.values.max()
+            
+//            print(maxTechnicalScore ?? 0)
+//            print(maxAestheticalScore ?? 0)
             
             for i in 0..<self.limit{
                 self.scoreDict[i] = Float(self.tW) / Float(maxTechnicalScore ?? 0) * Float(self.technicalScoreDict[i] ?? 0) + Float(self.aW) / Float(maxAestheticalScore ?? 0) * Float( self.aestheticalScoreDict[i] ?? 0)
+//                self.scoreDict[i] =  Float(self.technicalScoreDict[i] ?? 0) + Float( self.aestheticalScoreDict[i] ?? 0)
             }
+            
+//            print(self.scoreDict)
             
             // Sort results
             let sortedScoreDict  = self.scoreDict.sorted(by: { $0.value > $1.value })
-//            print(sortedScoreDict)
+            print(sortedScoreDict)
             
             // the array of indexes
             let sortedIndexes = sortedScoreDict.map { $0.key } // get the indexes of the images in order of score
@@ -309,6 +328,7 @@ class ImageClassificationViewController: UIViewController {
                     }
                     
                     DispatchQueue.main.async { [unowned self] in
+                        self.progressLabel.text = "Optimizing variety..."
                         self.counter += 8
                     }
                     
@@ -330,6 +350,7 @@ class ImageClassificationViewController: UIViewController {
                 
                 DispatchQueue.main.async { [unowned self] in
                     self.progressView.isHidden = true
+                    self.progressLabel.isHidden = true
                     print("Here the best image!")
                     self.imageView.image = self.images[self.bestIndexVariety.last ?? 0]
                     self.secondImageView.image = self.images[self.bestIndexVariety[0]]

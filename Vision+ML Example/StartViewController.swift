@@ -12,4 +12,14 @@ import UIKit
 class StartViewController:UIViewController{
     
     @IBOutlet weak var startButton: UIButton!
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        startButton.backgroundColor = .clear
+        startButton.layer.cornerRadius = 5
+        startButton.layer.borderWidth = 1
+        startButton.layer.borderColor = UIColor.white.cgColor
+    }
 }

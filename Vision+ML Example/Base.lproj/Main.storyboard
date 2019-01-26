@@ -46,6 +46,13 @@
                                 <rect key="frame" x="112" y="422" width="151" height="2"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </progressView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Wr-yk-ahf">
+                                <rect key="frame" x="16" y="361" width="343" height="55"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="DINAlternate-Bold" family="DIN Alternate" pointSize="24"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yz0-B1-zAs">
                                 <rect key="frame" x="323" y="0.0" width="30" height="53"/>
                                 <constraints>
@@ -107,6 +114,7 @@
                         <outlet property="firstWorstImageView" destination="hPC-n7-0hi" id="zND-eD-ycV"/>
                         <outlet property="fourthImageView" destination="vhd-ew-aye" id="uVt-OX-djy"/>
                         <outlet property="imageView" destination="gdk-AB-pmh" id="u7T-Cp-ve8"/>
+                        <outlet property="progressLabel" destination="4Wr-yk-ahf" id="5wa-ne-TuA"/>
                         <outlet property="progressView" destination="qNz-sX-GFJ" id="pew-on-bEE"/>
                         <outlet property="secondImageView" destination="3BG-Rg-jIu" id="c5x-Ba-uOi"/>
                         <outlet property="secondWorstImageView" destination="jAH-7E-t48" id="rCk-Uj-rWE"/>
@@ -115,7 +123,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="866.39999999999998" y="135.38230884557723"/>
+            <point key="canvasLocation" x="866.39999999999998" y="135.22167487684729"/>
         </scene>
         <!--Start View Controller-->
         <scene sceneID="PHX-QN-ueJ">
@@ -125,8 +133,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="epK-Oq-hhI">
-                                <rect key="frame" x="118" y="413.66666666666669" width="138" height="140.00000000000006"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="epK-Oq-hhI">
+                                <rect key="frame" x="118" y="509" width="138" height="45"/>
                                 <fontDescription key="fontDescription" name="DINAlternate-Bold" family="DIN Alternate" pointSize="35"/>
                                 <state key="normal" title="Start">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -161,7 +169,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XQ9-6i-PoF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-623.20000000000005" y="137.18140929535232"/>
+            <point key="canvasLocation" x="-623.20000000000005" y="136.69950738916256"/>
         </scene>
         <!--Select Images View Controller-->
         <scene sceneID="1z2-Vp-FdC">
@@ -171,8 +179,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="0.0" maxValue="200" translatesAutoresizingMaskIntoConstraints="NO" id="5hn-fw-aga">
-                                <rect key="frame" x="60" y="230" width="255" height="31"/>
+                            <slider opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="0.0" maxValue="300" translatesAutoresizingMaskIntoConstraints="NO" id="5hn-fw-aga">
+                                <rect key="frame" x="60" y="254" width="255" height="31"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <action selector="sliderValueChanged:" destination="OwE-Jz-Soh" eventType="valueChanged" id="QTl-Wj-vpc"/>
@@ -184,8 +192,8 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gDf-lE-E7I">
-                                <rect key="frame" x="90" y="390" width="196" height="53"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gDf-lE-E7I">
+                                <rect key="frame" x="89" y="509" width="196" height="45"/>
                                 <fontDescription key="fontDescription" name="DINAlternate-Bold" family="DIN Alternate" pointSize="35"/>
                                 <state key="normal" title="Compute">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -199,6 +207,7 @@
                         <constraints>
                             <constraint firstItem="5hn-fw-aga" firstAttribute="leading" secondItem="GXd-Kd-0r0" secondAttribute="leading" constant="62" id="3Nv-oe-Twl"/>
                             <constraint firstItem="5hn-fw-aga" firstAttribute="top" secondItem="Afb-if-gCV" secondAttribute="bottom" constant="62" id="Gba-7u-BW8"/>
+                            <constraint firstItem="gDf-lE-E7I" firstAttribute="leading" secondItem="GXd-Kd-0r0" secondAttribute="leading" constant="90" id="HUp-VS-atF"/>
                             <constraint firstItem="Afb-if-gCV" firstAttribute="top" secondItem="GXd-Kd-0r0" secondAttribute="top" constant="109.5" id="Loz-ef-ZAe"/>
                             <constraint firstItem="GXd-Kd-0r0" firstAttribute="trailing" secondItem="gDf-lE-E7I" secondAttribute="trailing" constant="89" id="MTk-qS-Jbf"/>
                             <constraint firstItem="5hn-fw-aga" firstAttribute="top" secondItem="Afb-if-gCV" secondAttribute="bottom" constant="62" id="NoX-pU-c3c"/>
@@ -206,20 +215,23 @@
                             <constraint firstItem="gDf-lE-E7I" firstAttribute="top" secondItem="5hn-fw-aga" secondAttribute="bottom" constant="130" id="Ta5-qj-Gdt"/>
                             <constraint firstItem="GXd-Kd-0r0" firstAttribute="trailing" secondItem="5hn-fw-aga" secondAttribute="trailing" constant="62" id="YOW-xn-x1A"/>
                             <constraint firstItem="gDf-lE-E7I" firstAttribute="leading" secondItem="GXd-Kd-0r0" secondAttribute="leading" constant="90" id="dKL-4k-Qlp"/>
+                            <constraint firstItem="GXd-Kd-0r0" firstAttribute="trailing" secondItem="gDf-lE-E7I" secondAttribute="trailing" constant="89" id="hlg-ye-Oeb"/>
                             <constraint firstItem="GXd-Kd-0r0" firstAttribute="bottom" secondItem="gDf-lE-E7I" secondAttribute="bottom" constant="224" id="p6u-jA-bJf"/>
+                            <constraint firstItem="GXd-Kd-0r0" firstAttribute="bottom" secondItem="gDf-lE-E7I" secondAttribute="bottom" constant="224" id="qSP-Zw-Mob"/>
                             <constraint firstItem="gDf-lE-E7I" firstAttribute="top" secondItem="5hn-fw-aga" secondAttribute="bottom" constant="130" id="vC4-8N-AXw"/>
                             <constraint firstItem="GXd-Kd-0r0" firstAttribute="trailing" secondItem="Afb-if-gCV" secondAttribute="trailing" constant="75" id="wVk-Ki-9Bs"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="GXd-Kd-0r0"/>
                     </view>
                     <connections>
+                        <outlet property="selectionButton" destination="gDf-lE-E7I" id="Vu7-D0-fUm"/>
                         <outlet property="selectionLabel" destination="Afb-if-gCV" id="8Hx-FR-6Y8"/>
                         <outlet property="selectionSlider" destination="5hn-fw-aga" id="FNw-zU-a1T"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ts4-kS-TEn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="85.599999999999994" y="136.28185907046478"/>
+            <point key="canvasLocation" x="85.599999999999994" y="135.96059113300493"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
