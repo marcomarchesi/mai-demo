@@ -29,6 +29,8 @@ class ImageClassificationViewController: UIViewController {
 //    @IBOutlet weak var varietyLabel: UILabel!
 //    @IBOutlet weak var predictionLabel: UILabel!
     
+    @IBOutlet weak var timeLabel: UILabel!
+    
     var images:[UIImage] = []
     var limit:Int = 500      //max number of images to be parsed
     let bestImagesLimit:Int = 7  //max index among the best images to be selected < limit
@@ -64,6 +66,7 @@ class ImageClassificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.timeLabel.isHidden = true
         start = CACurrentMediaTime()
         self.progressLabel.text = "Loading photos..."
     
@@ -309,10 +312,12 @@ class ImageClassificationViewController: UIViewController {
                     // reset the inception score
                     self.classificationPredictions.removeAll()
                     
-                    //shuffle N-1 elements
+                    //shuffle N-1 elements  (RANDOM OPTIMIZATION)
                     var shuffledIndexes = Array(selectedIndexes.shuffled()[0...self.shuffledImagesLimit])
                     shuffledIndexes.append(bestImageIndex) //append the best image
                     print(shuffledIndexes)
+                    
+                    // TODO: HILL CLIMBING
                     
                 // Calculate Inception/MobileNet Score
                     for i in shuffledIndexes{  //TODO replace with proper array of images
@@ -341,17 +346,21 @@ class ImageClassificationViewController: UIViewController {
                     }
                     
                 }
-                print(self.bestIndexVariety)
+                print("Best variety: ", self.bestIndexVariety)
 //                print(self.bestInceptionScore)
 //                print("DONE!")
                 
                 let end = CACurrentMediaTime()
-                print("Processes in :%f seconds",end - self.start)
+                
+                let timeString = "Processed in " + String(roundToNearestQuarter(num: Float(end - self.start))) + " seconds"
+                print(timeString)
                 
                 DispatchQueue.main.async { [unowned self] in
                     self.progressView.isHidden = true
                     self.progressLabel.isHidden = true
                     print("Here the best image!")
+                    self.timeLabel.text = timeString
+                    self.timeLabel.isHidden = false
                     self.imageView.image = self.images[self.bestIndexVariety.last ?? 0]
                     self.secondImageView.image = self.images[self.bestIndexVariety[0]]
                     self.thirdImageView.image = self.images[self.bestIndexVariety[1]]

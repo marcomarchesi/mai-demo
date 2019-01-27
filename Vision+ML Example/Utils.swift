@@ -101,3 +101,7 @@ func calculateMeanScore(for predictionsArray:MLMultiArray) -> Float{
     
     return Float(scoreSum)
 }
+
+func roundToNearestQuarter(num : Float) -> Float {
+    return round(num * 4.0)/4.0
+}
