@@ -268,8 +268,8 @@ class ImageClassificationViewController: UIViewController {
                 self.counter = 60
             }
             
-//            print(self.technicalScoreDict)
-//            print(self.aestheticalScoreDict)
+            print(self.technicalScoreDict)
+            print(self.aestheticalScoreDict)
             
             let maxTechnicalScore = self.technicalScoreDict.values.max()
             let maxAestheticalScore = self.aestheticalScoreDict.values.max()
@@ -282,7 +282,7 @@ class ImageClassificationViewController: UIViewController {
 //                self.scoreDict[i] =  Float(self.technicalScoreDict[i] ?? 0) + Float( self.aestheticalScoreDict[i] ?? 0)
             }
             
-//            print(self.scoreDict)
+            print(self.scoreDict)
             
             // Sort results
             let sortedScoreDict  = self.scoreDict.sorted(by: { $0.value > $1.value })
@@ -341,12 +341,12 @@ class ImageClassificationViewController: UIViewController {
                     }
                     
                 }
-//                print(self.bestIndexVariety)
+                print(self.bestIndexVariety)
 //                print(self.bestInceptionScore)
-                print("DONE!")
+//                print("DONE!")
                 
                 let end = CACurrentMediaTime()
-                print(end - self.start)
+                print("Processes in :%f seconds",end - self.start)
                 
                 DispatchQueue.main.async { [unowned self] in
                     self.progressView.isHidden = true
