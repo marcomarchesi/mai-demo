@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Photos
 
 class StartViewController:UIViewController{
     
@@ -21,5 +22,14 @@ class StartViewController:UIViewController{
         startButton.layer.cornerRadius = 5
         startButton.layer.borderWidth = 1
         startButton.layer.borderColor = UIColor.white.cgColor
+        
+        let photos = PHPhotoLibrary.authorizationStatus()
+        if photos == .notDetermined {
+            PHPhotoLibrary.requestAuthorization({status in
+                if status == .authorized{
+                    print("Authorized")
+                } else {}
+            })
+        }
     }
 }
