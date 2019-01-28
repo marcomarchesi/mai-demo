@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>mai</string>
+	<string>MomentoAI</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -23,7 +23,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Takes pictures to demonstrate image recognition.</string>
+	<string>Takes pictures to demonstrate image recognition</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access for image assessment</string>
 	<key>UILaunchStoryboardName</key>
