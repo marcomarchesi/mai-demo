@@ -20,12 +20,12 @@ class SelectImagesViewController:UIViewController{
     @IBOutlet weak var stopDate:UIDatePicker!
     
     @IBAction func sliderValueChanged(_ sender:Any){
-        selectionLabel.text = "\(Int(selectionSlider.value))"
+        selectionLabel.text = "\(Float(selectionSlider.value / 100))"
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        selectionSlider.maximumValue = 400
+//        selectionSlider.maximumValue = 100
         
         selectionButton.backgroundColor = .clear
         selectionButton.layer.cornerRadius = 5
@@ -38,7 +38,9 @@ class SelectImagesViewController:UIViewController{
         if segue.destination is ImageClassificationViewController
         {
             let vc = segue.destination as? ImageClassificationViewController
-            vc?.limit = Int(selectionSlider.value)
+//            vc?.limit = Int(selectionSlider.value)
+            vc?.tW = Double(Float(selectionSlider.value / 100))
+            vc?.aW = Double(Float(1 - selectionSlider.value / 100))
             vc?.startDate = startDate.date as NSDate
             vc?.stopDate = stopDate.date as NSDate
         }

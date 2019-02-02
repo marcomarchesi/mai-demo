@@ -36,8 +36,8 @@ class ImageClassificationViewController: UIViewController {
     let bestImagesLimit:Int = 7  //max index among the best images to be selected < limit
     let shuffledImagesLimit:Int = 4 //max index among the best images to be considered for calculating the inception score
     let varietySize:Int = 5   //number of inception score loops
-    let tW = 0.5
-    let aW = 0.5
+    var tW = 0.5
+    var aW = 0.5
     var classificationPredictions:[Float] = []
     var classificationIndex:Int = 0
     
