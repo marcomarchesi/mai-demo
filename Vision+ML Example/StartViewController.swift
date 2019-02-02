@@ -21,7 +21,7 @@ class StartViewController:UIViewController{
         startButton.backgroundColor = .clear
         startButton.layer.cornerRadius = 5
         startButton.layer.borderWidth = 1
-        startButton.layer.borderColor = UIColor.white.cgColor
+        startButton.layer.borderColor = UIColor.black.cgColor
         
         let photos = PHPhotoLibrary.authorizationStatus()
         if photos == .notDetermined {

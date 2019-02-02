@@ -52,6 +52,8 @@ class ImageClassificationViewController: UIViewController {
     
     var start:Double = 0
     
+    var startDate:NSDate? = nil
+    var stopDate:NSDate? = nil
     
     // setup progressView
     var counter:Int = 0 {
@@ -71,9 +73,36 @@ class ImageClassificationViewController: UIViewController {
         self.progressLabel.text = "Loading photos..."
     
         // fetch last N images from Photo Library
-        self.fetchPhotos()
+//        self.fetchPhotos()
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "MM-dd-yyyy"
+//        self.fetchPhotosInRange(startDate: formatter.date(from: "04-06-2015")! as NSDate, endDate: formatter.date(from: "04-16-2019")! as NSDate)
+        self.fetchPhotosInRange(startDate: self.startDate!, endDate: self.stopDate!)
         // compute the images
         self.compute()
+    }
+    
+    func fetchPhotosInRange(startDate:NSDate, endDate:NSDate) {
+        
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.isSynchronous = true
+        requestOptions.isNetworkAccessAllowed = true
+        
+        // Fetch the images between the start and end date
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.predicate = NSPredicate(format: "creationDate > %@ AND creationDate < %@", startDate, endDate)
+        
+        self.counter = 0
+        
+        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
+        print(fetchResult.count)
+        if fetchResult.count > 0 {
+            for i in 0..<fetchResult.count{
+                self.counter += 30 / fetchResult.count
+                fetchPhotoAtIndex(i, fetchResult)
+            }
+            
+        }
     }
     
     func fetchPhotos () {
@@ -82,12 +111,13 @@ class ImageClassificationViewController: UIViewController {
         fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
         fetchOptions.fetchLimit = limit
         
-        
         self.counter = 0
 
         // Fetch the image assets
         let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
 
+        print(fetchResult.count)
+        
         if fetchResult.count > 0 {
             for i in 0..<limit{
                 self.counter += 30 / fetchResult.count

@@ -16,6 +16,9 @@ class SelectImagesViewController:UIViewController{
     @IBOutlet weak var selectionLabel: UILabel!
     @IBOutlet weak var selectionButton:UIButton!
     
+    @IBOutlet weak var startDate:UIDatePicker!
+    @IBOutlet weak var stopDate:UIDatePicker!
+    
     @IBAction func sliderValueChanged(_ sender:Any){
         selectionLabel.text = "\(Int(selectionSlider.value))"
     }
@@ -27,7 +30,7 @@ class SelectImagesViewController:UIViewController{
         selectionButton.backgroundColor = .clear
         selectionButton.layer.cornerRadius = 5
         selectionButton.layer.borderWidth = 1
-        selectionButton.layer.borderColor = UIColor.white.cgColor
+        selectionButton.layer.borderColor = UIColor.black.cgColor
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
@@ -36,6 +39,8 @@ class SelectImagesViewController:UIViewController{
         {
             let vc = segue.destination as? ImageClassificationViewController
             vc?.limit = Int(selectionSlider.value)
+            vc?.startDate = startDate.date as NSDate
+            vc?.stopDate = stopDate.date as NSDate
         }
     }
 }

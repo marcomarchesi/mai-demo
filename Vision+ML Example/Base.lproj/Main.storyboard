@@ -13,7 +13,7 @@
         <!--Image Classification View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ImageClassificationViewController" customModule="Vision_ML_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ImageClassificationViewController" customModule="MomentoAI" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -31,7 +31,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Wr-yk-ahf">
-                                <rect key="frame" x="23" y="111" width="303" height="28"/>
+                                <rect key="frame" x="36" y="100" width="303" height="28"/>
                                 <fontDescription key="fontDescription" name="DINAlternate-Bold" family="DIN Alternate" pointSize="24"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -42,7 +42,9 @@
                                     <constraint firstAttribute="width" secondItem="Yz0-B1-zAs" secondAttribute="height" multiplier="3:4" id="51X-f2-eFU"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="DINAlternate-Bold" family="DIN Alternate" pointSize="33"/>
-                                <state key="normal" title="X"/>
+                                <state key="normal" title="X">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <segue destination="OwE-Jz-Soh" kind="presentation" id="viw-Gp-sMG"/>
                                 </connections>
@@ -51,7 +53,6 @@
                                 <rect key="frame" x="17" y="23" width="342" height="51"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="DINAlternate-Bold" family="DIN Alternate" pointSize="24"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jAH-7E-t48">
@@ -69,14 +70,14 @@
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qNz-sX-GFJ">
                                 <rect key="frame" x="116" y="300" width="143" height="2"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </progressView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hPC-n7-0hi">
                                 <rect key="frame" x="20" y="638" width="165" height="157"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Yz0-B1-zAs" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="21" id="1jn-hS-duQ"/>
                             <constraint firstItem="4Wr-yk-ahf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="5B5-e0-QOz"/>
@@ -106,7 +107,7 @@
         <!--Start View Controller-->
         <scene sceneID="PHX-QN-ueJ">
             <objects>
-                <viewController id="dVE-kQ-scf" customClass="StartViewController" customModule="Vision_ML_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="dVE-kQ-scf" customClass="StartViewController" customModule="MomentoAI" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="E8X-ea-Qq3">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -117,7 +118,6 @@
                                     <constraint firstAttribute="width" secondItem="0Wo-j3-tDK" secondAttribute="height" multiplier="257:60" id="pV9-4q-hYt"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="DINAlternate-Bold" family="DIN Alternate" pointSize="51"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="epK-Oq-hhI">
@@ -127,14 +127,14 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" name="DINAlternate-Bold" family="DIN Alternate" pointSize="35"/>
                                 <state key="normal" title="Start">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <segue destination="OwE-Jz-Soh" kind="presentation" id="HDh-sU-cHY"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="0Wo-j3-tDK" firstAttribute="centerX" secondItem="E8X-ea-Qq3" secondAttribute="centerX" id="YgS-1k-9lC"/>
                             <constraint firstItem="lZd-ky-ysB" firstAttribute="bottom" secondItem="epK-Oq-hhI" secondAttribute="bottom" constant="204" id="gXw-LJ-3N6"/>
@@ -155,43 +155,73 @@
         <!--Select Images View Controller-->
         <scene sceneID="1z2-Vp-FdC">
             <objects>
-                <viewController id="OwE-Jz-Soh" customClass="SelectImagesViewController" customModule="Vision_ML_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="OwE-Jz-Soh" customClass="SelectImagesViewController" customModule="MomentoAI" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Byx-Na-EpC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <slider opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="0.0" maxValue="300" translatesAutoresizingMaskIntoConstraints="NO" id="5hn-fw-aga">
-                                <rect key="frame" x="60" y="258" width="255" height="31"/>
+                                <rect key="frame" x="60" y="159" width="255" height="31"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
                                     <action selector="sliderValueChanged:" destination="OwE-Jz-Soh" eventType="valueChanged" id="QTl-Wj-vpc"/>
                                 </connections>
                             </slider>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="50" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Afb-if-gCV">
-                                <rect key="frame" x="171.66666666666666" y="121" width="32" height="39"/>
+                                <rect key="frame" x="171.66666666666666" y="84" width="32" height="39"/>
                                 <fontDescription key="fontDescription" name="DINAlternate-Bold" family="DIN Alternate" pointSize="33"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Start Date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1wF-nd-sLM">
+                                <rect key="frame" x="118" y="212" width="138" height="39"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="DINAlternate-Bold" family="DIN Alternate" pointSize="33"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gDf-lE-E7I">
-                                <rect key="frame" x="113" y="526" width="149" height="53"/>
+                                <rect key="frame" x="113" y="683" width="149" height="53"/>
                                 <fontDescription key="fontDescription" name="DINAlternate-Bold" family="DIN Alternate" pointSize="35"/>
                                 <state key="normal" title="Compute">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="presentation" id="oqb-Gu-poq"/>
                                 </connections>
                             </button>
+                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="nKE-ll-ecB">
+                                <rect key="frame" x="-19" y="494" width="414" height="163"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <date key="date" timeIntervalSinceReferenceDate="570828732.413203">
+                                    <!--2019-02-02 19:32:12 +0000-->
+                                </date>
+                                <locale key="locale" localeIdentifier="en_GB"/>
+                            </datePicker>
+                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="30" useCurrentDate="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sqi-LR-kpn">
+                                <rect key="frame" x="-19" y="259" width="414" height="163"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <date key="date" timeIntervalSinceReferenceDate="570828732.413203">
+                                    <!--2019-02-02 19:32:12 +0000-->
+                                </date>
+                                <locale key="locale" localeIdentifier="en_GB"/>
+                            </datePicker>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Stop Date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="78c-U8-7dJ">
+                                <rect key="frame" x="121" y="447" width="133" height="39"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="DINAlternate-Bold" family="DIN Alternate" pointSize="33"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="5hn-fw-aga" firstAttribute="leading" secondItem="GXd-Kd-0r0" secondAttribute="leading" constant="62" id="7ez-pq-87U"/>
                             <constraint firstItem="gDf-lE-E7I" firstAttribute="leading" secondItem="GXd-Kd-0r0" secondAttribute="leading" constant="113" id="BsL-jV-y8S"/>
-                            <constraint firstItem="Afb-if-gCV" firstAttribute="top" secondItem="GXd-Kd-0r0" secondAttribute="top" constant="77" id="FWI-JT-qiS"/>
-                            <constraint firstItem="GXd-Kd-0r0" firstAttribute="bottom" secondItem="gDf-lE-E7I" secondAttribute="bottom" constant="199" id="Fnm-Bh-DSb"/>
+                            <constraint firstItem="Afb-if-gCV" firstAttribute="top" secondItem="GXd-Kd-0r0" secondAttribute="top" constant="40" id="FWI-JT-qiS"/>
+                            <constraint firstItem="GXd-Kd-0r0" firstAttribute="bottom" secondItem="gDf-lE-E7I" secondAttribute="bottom" constant="42" id="Fnm-Bh-DSb"/>
                             <constraint firstItem="Afb-if-gCV" firstAttribute="centerX" secondItem="Byx-Na-EpC" secondAttribute="centerX" id="GDP-E3-ePV"/>
-                            <constraint firstItem="5hn-fw-aga" firstAttribute="top" secondItem="Afb-if-gCV" secondAttribute="bottom" constant="98" id="MZG-BA-B1A"/>
+                            <constraint firstItem="5hn-fw-aga" firstAttribute="top" secondItem="Afb-if-gCV" secondAttribute="bottom" constant="36" id="MZG-BA-B1A"/>
                             <constraint firstItem="5hn-fw-aga" firstAttribute="centerX" secondItem="Byx-Na-EpC" secondAttribute="centerX" id="ddv-uJ-4g5"/>
                             <constraint firstItem="gDf-lE-E7I" firstAttribute="centerX" secondItem="Byx-Na-EpC" secondAttribute="centerX" id="j9D-Mw-0AJ"/>
                         </constraints>
@@ -201,15 +231,16 @@
                         <outlet property="selectionButton" destination="gDf-lE-E7I" id="Vu7-D0-fUm"/>
                         <outlet property="selectionLabel" destination="Afb-if-gCV" id="8Hx-FR-6Y8"/>
                         <outlet property="selectionSlider" destination="5hn-fw-aga" id="FNw-zU-a1T"/>
+                        <outlet property="startDate" destination="Sqi-LR-kpn" id="ua2-AP-2s5"/>
+                        <outlet property="stopDate" destination="nKE-ll-ecB" id="k8D-nn-PHD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ts4-kS-TEn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="84" y="135.38230884557723"/>
+            <point key="canvasLocation" x="82.608695652173921" y="135.32608695652175"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="oqb-Gu-poq"/>
         <segue reference="viw-Gp-sMG"/>
     </inferredMetricsTieBreakers>
 </document>
