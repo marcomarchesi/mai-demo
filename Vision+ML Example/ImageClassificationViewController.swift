@@ -31,6 +31,21 @@ class ImageClassificationViewController: UIViewController {
     
     @IBOutlet weak var timeLabel: UILabel!
     
+    var aFirstImageLabel:UILabel!
+    var tFirstImageLabel:UILabel!
+    var aSecondImageLabel:UILabel!
+    var tSecondImageLabel:UILabel!
+    var aThirdImageLabel:UILabel!
+    var tThirdImageLabel:UILabel!
+    var aFourthImageLabel:UILabel!
+    var tFourthImageLabel:UILabel!
+    var aFifthImageLabel:UILabel!
+    var tFifthImageLabel:UILabel!
+    var aFirstWorstImageLabel:UILabel!
+    var tFirstWorstImageLabel:UILabel!
+    var aSecondWorstImageLabel:UILabel!
+    var tSecondWorstImageLabel:UILabel!
+    
     var images:[UIImage] = []
     var limit:Int = 500      //max number of images to be parsed
     let bestImagesLimit:Int = 7  //max index among the best images to be selected < limit
@@ -49,6 +64,7 @@ class ImageClassificationViewController: UIViewController {
     var technicalScoreIndex = 0
     var bestInceptionScore:Float = 0
     var bestIndexVariety:[Int] = []
+    var worstIndexes = [Int]()
     
     var start:Double = 0
     
@@ -65,21 +81,69 @@ class ImageClassificationViewController: UIViewController {
         }
     }
     
+    enum scoreType {
+        case AESTHETIC
+        case TECHNICAL
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.timeLabel.isHidden = true
         start = CACurrentMediaTime()
         self.progressLabel.text = "Loading photos..."
+        
+        
+        self.aFirstImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.tFirstImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.aSecondImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.tSecondImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.aThirdImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.tThirdImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.aFourthImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.tFourthImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.aFifthImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.tFifthImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.aFirstWorstImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.tFirstWorstImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.aSecondWorstImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        self.tSecondWorstImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
+        
+        
     
         // fetch last N images from Photo Library
 //        self.fetchPhotos()
+        
 //        let formatter = DateFormatter()
 //        formatter.dateFormat = "MM-dd-yyyy"
 //        self.fetchPhotosInRange(startDate: formatter.date(from: "04-06-2015")! as NSDate, endDate: formatter.date(from: "04-16-2019")! as NSDate)
         self.fetchPhotosInRange(startDate: self.startDate!, endDate: self.stopDate!)
         // compute the images
         self.compute()
+    }
+    
+    func makeLabel(label:UILabel, vw:UIImageView, y:CGFloat) {
+//        label = UILabel(frame: CGRect(x:0,y:0, width:200, height: 50))
+        view.addSubview(label)
+        label.textAlignment = .center
+        label.backgroundColor = UIColor.black
+        label.adjustsFontSizeToFitWidth = true
+        label.frame.origin.x = vw.frame.origin.x + vw.frame.width - 50
+        label.frame.origin.y = vw.frame.origin.y + vw.frame.height - 40 + y
+        label.textColor =  UIColor.white
+        label.font = UIFont(name: "DIN-Alternate-Bold", size: 20)
+        
+    }
+    
+    func makeText(label:UILabel, value:Float!, type:scoreType){
+        var labelValue:Float! = value
+        labelValue = labelValue.rounded(toPlaces: 2)
+        if type == scoreType.TECHNICAL {
+            label.text = "t" + String(labelValue)
+        } else
+        {
+            label.text = "a" + String(labelValue)
+        }
     }
     
     func fetchPhotosInRange(startDate:NSDate, endDate:NSDate) {
@@ -301,8 +365,8 @@ class ImageClassificationViewController: UIViewController {
                 self.counter = 60
             }
             
-            print(self.technicalScoreDict)
-            print(self.aestheticalScoreDict)
+//            print(self.technicalScoreDict)
+//            print(self.aestheticalScoreDict)
             
             let maxTechnicalScore = self.technicalScoreDict.values.max()
             let maxAestheticalScore = self.aestheticalScoreDict.values.max()
@@ -310,24 +374,24 @@ class ImageClassificationViewController: UIViewController {
 //            print(maxTechnicalScore ?? 0)
 //            print(maxAestheticalScore ?? 0)
             
-            for i in 0..<self.limit{
+            for i in 0..<self.images.count{
                 self.scoreDict[i] = Float(self.tW) / Float(maxTechnicalScore ?? 0) * Float(self.technicalScoreDict[i] ?? 0) + Float(self.aW) / Float(maxAestheticalScore ?? 0) * Float( self.aestheticalScoreDict[i] ?? 0)
 //                self.scoreDict[i] =  Float(self.technicalScoreDict[i] ?? 0) + Float( self.aestheticalScoreDict[i] ?? 0)
             }
             
-            print(self.scoreDict)
+//            print(self.scoreDict)
             
             // Sort results
             let sortedScoreDict  = self.scoreDict.sorted(by: { $0.value > $1.value })
-            print(sortedScoreDict)
+//            print(sortedScoreDict)
             
             // the array of indexes
             let sortedIndexes = sortedScoreDict.map { $0.key } // get the indexes of the images in order of score
             
             // get also the worst images
-            var worstIndexes = [Int]()
-            worstIndexes = Array(sortedIndexes.suffix(2))
-//            print(worstIndexes)
+            
+            self.worstIndexes = Array(sortedIndexes.suffix(2))
+
         
             // pick the best image index
             let bestImageIndex = sortedIndexes[0]
@@ -376,7 +440,7 @@ class ImageClassificationViewController: UIViewController {
                     }
                     
                 }
-                print("Best variety: ", self.bestIndexVariety)
+//                print("Best variety: ", self.bestIndexVariety)
 //                print(self.bestInceptionScore)
 //                print("DONE!")
                 
@@ -386,6 +450,8 @@ class ImageClassificationViewController: UIViewController {
                 print(timeString)
                 
                 DispatchQueue.main.async { [unowned self] in
+                    
+                    print(self.images.count)
                     self.progressView.isHidden = true
                     self.progressLabel.isHidden = true
                     print("Here the best image!")
@@ -396,10 +462,58 @@ class ImageClassificationViewController: UIViewController {
                     self.thirdImageView.image = self.images[self.bestIndexVariety[1]]
                     self.fourthImageView.image = self.images[self.bestIndexVariety[2]]
                     self.fifthImageView.image = self.images[self.bestIndexVariety[3]]
-                    self.firstWorstImageView.image = self.images[worstIndexes[0]]
-                    self.secondWorstImageView.image = self.images[worstIndexes[1]]
+                    self.firstWorstImageView.image = self.images[self.worstIndexes[0]]
+                    self.secondWorstImageView.image = self.images[self.worstIndexes[1]]
+                    
+                    
+                    // TODO add labels for A and T scores
+                    self.makeLabel(label: self.aFirstImageLabel, vw: self.imageView, y:0)
+                    self.makeText(label: self.aFirstImageLabel, value: self.aestheticalScoreDict[self.bestIndexVariety.last!], type: scoreType.AESTHETIC)
+                    self.makeLabel(label: self.tFirstImageLabel, vw: self.imageView, y: 20)
+                    self.makeText(label: self.tFirstImageLabel, value: self.technicalScoreDict[self.bestIndexVariety.last!], type: scoreType.TECHNICAL)
+                    
+                    self.makeLabel(label: self.aSecondImageLabel, vw: self.secondImageView, y:0)
+                    self.makeText(label: self.aSecondImageLabel, value: self.aestheticalScoreDict[self.bestIndexVariety[0]], type: scoreType.AESTHETIC)
+                    self.makeLabel(label: self.tSecondImageLabel, vw: self.secondImageView, y: 20)
+                    self.makeText(label: self.tSecondImageLabel, value: self.technicalScoreDict[self.bestIndexVariety[0]], type: scoreType.TECHNICAL)
+                    
+                    self.makeLabel(label: self.aThirdImageLabel, vw: self.thirdImageView, y:0)
+                    self.makeText(label: self.aThirdImageLabel, value: self.aestheticalScoreDict[self.bestIndexVariety[1]], type: scoreType.AESTHETIC)
+                    self.makeLabel(label: self.tThirdImageLabel, vw: self.thirdImageView, y: 20)
+                    self.makeText(label: self.tThirdImageLabel, value: self.technicalScoreDict[self.bestIndexVariety[1]], type: scoreType.TECHNICAL)
+                    
+                    self.makeLabel(label: self.aFourthImageLabel, vw: self.fourthImageView, y:0)
+                    self.makeText(label: self.aFourthImageLabel, value: self.aestheticalScoreDict[self.bestIndexVariety[2]], type: scoreType.AESTHETIC)
+                    self.makeLabel(label: self.tFourthImageLabel, vw: self.fourthImageView, y: 20)
+                    self.makeText(label: self.tFourthImageLabel, value: self.technicalScoreDict[self.bestIndexVariety[2]], type: scoreType.TECHNICAL)
+                    
+                    self.makeLabel(label: self.aFifthImageLabel, vw: self.fifthImageView, y:0)
+                    self.makeText(label: self.aFifthImageLabel, value: self.aestheticalScoreDict[self.bestIndexVariety[3]], type: scoreType.AESTHETIC)
+                    self.makeLabel(label: self.tFifthImageLabel, vw: self.fifthImageView, y: 20)
+                    self.makeText(label: self.tFifthImageLabel, value: self.technicalScoreDict[self.bestIndexVariety[3]], type: scoreType.TECHNICAL)
+                    
+                    self.makeLabel(label: self.aFirstWorstImageLabel, vw: self.firstWorstImageView, y:0)
+                    self.makeText(label: self.aFirstWorstImageLabel, value: self.aestheticalScoreDict[self.worstIndexes[0]], type: scoreType.AESTHETIC)
+                    self.makeLabel(label: self.tFirstWorstImageLabel, vw: self.firstWorstImageView, y: 20)
+                    self.makeText(label: self.tFirstWorstImageLabel, value: self.technicalScoreDict[self.worstIndexes[0]], type: scoreType.TECHNICAL)
+
+                    self.makeLabel(label: self.aSecondWorstImageLabel, vw: self.secondWorstImageView, y:0)
+                    self.makeText(label: self.aSecondWorstImageLabel, value: self.aestheticalScoreDict[self.worstIndexes[1]], type: scoreType.AESTHETIC)
+                    self.makeLabel(label: self.tSecondWorstImageLabel, vw: self.secondWorstImageView, y: 20)
+                    self.makeText(label: self.tSecondWorstImageLabel, value: self.technicalScoreDict[self.worstIndexes[1]], type: scoreType.TECHNICAL)
+
+                    
+                    
                 }
             }
         }
+    }
+}
+
+extension Float {
+    /// Rounds the double to decimal places value
+    func rounded(toPlaces places:Int) -> Float {
+        let divisor = pow(10.0, Float(places))
+        return (self * divisor).rounded() / divisor
     }
 }
