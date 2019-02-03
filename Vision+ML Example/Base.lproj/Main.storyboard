@@ -45,7 +45,7 @@
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <segue destination="OwE-Jz-Soh" kind="presentation" id="viw-Gp-sMG"/>
+                                    <segue destination="OwE-Jz-Soh" kind="presentation" identifier="FromResultsToSelection" id="viw-Gp-sMG"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TZe-Wk-ic5">
@@ -151,10 +151,10 @@
             </objects>
             <point key="canvasLocation" x="-624.79999999999995" y="136.28185907046478"/>
         </scene>
-        <!--Select Images View Controller-->
+        <!--SelectImageViewController-->
         <scene sceneID="1z2-Vp-FdC">
             <objects>
-                <viewController id="OwE-Jz-Soh" customClass="SelectImagesViewController" customModule="MomentoAI" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SelectImagesViewController" title="SelectImageViewController" id="OwE-Jz-Soh" customClass="SelectImagesViewController" customModule="MomentoAI" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Byx-Na-EpC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>

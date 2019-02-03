@@ -92,6 +92,8 @@ class ImageClassificationViewController: UIViewController {
         self.timeLabel.isHidden = true
         start = CACurrentMediaTime()
         self.progressLabel.text = "Loading photos..."
+        self.progressLabel.isHidden = true
+        self.progressView.isHidden = true
         
         
         self.aFirstImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
@@ -117,9 +119,37 @@ class ImageClassificationViewController: UIViewController {
 //        let formatter = DateFormatter()
 //        formatter.dateFormat = "MM-dd-yyyy"
 //        self.fetchPhotosInRange(startDate: formatter.date(from: "04-06-2015")! as NSDate, endDate: formatter.date(from: "04-16-2019")! as NSDate)
+//        self.fetchPhotosInRange(startDate: self.startDate!, endDate: self.stopDate!)
+//        // compute the images
+//        if self.images.count > 10{
+//            self.progressLabel.isHidden = false
+//            self.progressView.isHidden = false
+//            self.compute()
+//        }
+//        else{
+//            print("No images")
+//            let alert = UIAlertController(title: "H4 with Guide Pins", message: "Can it be removed?", preferredStyle: UIAlertControllerStyle.alert)
+//            alert.addAction(UIAlertAction(title:"OK", style: .default, handler:  { action in self.performSegue(withIdentifier: "FromResultsToSelection", sender: self) }))
+//            self.present(alert, animated: true, completion: nil)
+//        }
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.fetchPhotosInRange(startDate: self.startDate!, endDate: self.stopDate!)
         // compute the images
-        self.compute()
+        if self.images.count > 10{
+            self.progressLabel.isHidden = false
+            self.progressView.isHidden = false
+            self.compute()
+        }
+        else{
+            let alert = UIAlertController(title: "Error", message: "Select a time interval that contains more than 10 images", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title:"OK", style: .default, handler:  { action in self.performSegue(withIdentifier: "FromResultsToSelection", sender: self) }))
+            self.present(alert, animated: true, completion: nil)
+        }
+        
     }
     
     func makeLabel(label:UILabel, vw:UIImageView, y:CGFloat) {
@@ -159,13 +189,11 @@ class ImageClassificationViewController: UIViewController {
         self.counter = 0
         
         let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
-        print(fetchResult.count)
         if fetchResult.count > 0 {
             for i in 0..<fetchResult.count{
                 self.counter += 30 / fetchResult.count
                 fetchPhotoAtIndex(i, fetchResult)
             }
-            
         }
     }
     
@@ -344,7 +372,7 @@ class ImageClassificationViewController: UIViewController {
             
             
             DispatchQueue.main.async { [unowned self] in
-                self.progressLabel.text = "Calculating scores..."
+                self.progressLabel.text = "Calculating " + String(self.images.count) + " scores..."
                 self.counter = 30
             }
             
