@@ -48,7 +48,7 @@ class ImageClassificationViewController: UIViewController {
     
     var images:[UIImage] = []
     var limit:Int = 500      //max number of images to be parsed
-    let bestImagesLimit:Int = 7  //max index among the best images to be selected < limit
+    let bestImagesLimit:Int = 10  //max index among the best images to be selected < limit
     let shuffledImagesLimit:Int = 4 //max index among the best images to be considered for calculating the inception score
     let varietySize:Int = 5   //number of inception score loops
     var tW = 0.5
@@ -65,6 +65,11 @@ class ImageClassificationViewController: UIViewController {
     var bestInceptionScore:Float = 0
     var bestIndexVariety:[Int] = []
     var worstIndexes = [Int]()
+    
+    
+    // add Inception Categories
+    var InceptionDict:Dictionary = [Int:String]()
+    var maxCategory:String = ""
     
     var start:Double = 0
     
@@ -95,7 +100,6 @@ class ImageClassificationViewController: UIViewController {
         self.progressLabel.isHidden = true
         self.progressView.isHidden = true
         
-        
         self.aFirstImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
         self.tFirstImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
         self.aSecondImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
@@ -110,33 +114,19 @@ class ImageClassificationViewController: UIViewController {
         self.tFirstWorstImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
         self.aSecondWorstImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
         self.tSecondWorstImageLabel = UILabel(frame: CGRect(x:0,y:0, width:50, height: 20))
-        
-        
-    
-        // fetch last N images from Photo Library
-//        self.fetchPhotos()
-        
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "MM-dd-yyyy"
-//        self.fetchPhotosInRange(startDate: formatter.date(from: "04-06-2015")! as NSDate, endDate: formatter.date(from: "04-16-2019")! as NSDate)
-//        self.fetchPhotosInRange(startDate: self.startDate!, endDate: self.stopDate!)
-//        // compute the images
-//        if self.images.count > 10{
-//            self.progressLabel.isHidden = false
-//            self.progressView.isHidden = false
-//            self.compute()
-//        }
-//        else{
-//            print("No images")
-//            let alert = UIAlertController(title: "H4 with Guide Pins", message: "Can it be removed?", preferredStyle: UIAlertControllerStyle.alert)
-//            alert.addAction(UIAlertAction(title:"OK", style: .default, handler:  { action in self.performSegue(withIdentifier: "FromResultsToSelection", sender: self) }))
-//            self.present(alert, animated: true, completion: nil)
-//        }
-        
     }
+    
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        self.view = nil
+//        self.images.removeAll()
+//    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        // fetch last N images from Photo Library
+        // self.fetchPhotos()
         self.fetchPhotosInRange(startDate: self.startDate!, endDate: self.stopDate!)
         // compute the images
         if self.images.count > 10{
@@ -145,15 +135,13 @@ class ImageClassificationViewController: UIViewController {
             self.compute()
         }
         else{
-            let alert = UIAlertController(title: "Error", message: "Select a time interval that contains more than 10 images", preferredStyle: UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title: "Error", message: "Select a time interval that contains more than 10 images", preferredStyle: UIAlertController.Style.alert)
             alert.addAction(UIAlertAction(title:"OK", style: .default, handler:  { action in self.performSegue(withIdentifier: "FromResultsToSelection", sender: self) }))
             self.present(alert, animated: true, completion: nil)
         }
-        
     }
     
     func makeLabel(label:UILabel, vw:UIImageView, y:CGFloat) {
-//        label = UILabel(frame: CGRect(x:0,y:0, width:200, height: 50))
         view.addSubview(label)
         label.textAlignment = .center
         label.backgroundColor = UIColor.black
@@ -162,7 +150,6 @@ class ImageClassificationViewController: UIViewController {
         label.frame.origin.y = vw.frame.origin.y + vw.frame.height - 40 + y
         label.textColor =  UIColor.white
         label.font = UIFont(name: "DIN-Alternate-Bold", size: 20)
-        
     }
     
     func makeText(label:UILabel, value:Float!, type:scoreType){
@@ -269,12 +256,23 @@ class ImageClassificationViewController: UIViewController {
             // The `results` will always be `VNClassificationObservation`s, as specified by the Core ML model in this project.
             let predictions = results as! [VNClassificationObservation]
             
+            
             if predictions.isEmpty {
             } else {
+                
+                var maxConfidence:Float = 0.0
+                
                 //reset classificationPredictions
                 for i in 0..<(predictions.count) {
+                    if predictions[i].confidence > maxConfidence {
+                        maxConfidence = predictions[i].confidence
+                        self.maxCategory = predictions[i].identifier
+//                        self.InceptionDict[i] = predictions[i].identifier
+                    }
                     self.classificationPredictions.append(predictions[i].confidence)
+                    
                 }
+//                print(maxCategory)
             }
         }
     }
@@ -287,7 +285,7 @@ class ImageClassificationViewController: UIViewController {
              To use a different Core ML classifier model, add it to the project
              and replace `MobileNet` with that model's generated Swift class.
              */
-            let model = try VNCoreMLModel(for: NimaAesthetic().model)
+            let model = try VNCoreMLModel(for: aesthetic().model)
             
             let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
                 self?.AestheticalPrediction(for: request, error: error)
@@ -307,7 +305,7 @@ class ImageClassificationViewController: UIViewController {
              To use a different Core ML classifier model, add it to the project
              and replace `MobileNet` with that model's generated Swift class.
              */
-            let model = try VNCoreMLModel(for: NimaTechnical().model)
+            let model = try VNCoreMLModel(for: technical().model)
             
             let request = VNCoreMLRequest(model: model, completionHandler: { [weak self] request, error in
                 self?.TechnicalPrediction(for: request, error: error)
@@ -368,7 +366,7 @@ class ImageClassificationViewController: UIViewController {
     func compute() {
         
         // Compute predictions of aesthetical and technical scores
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
             
             
             DispatchQueue.main.async { [unowned self] in
@@ -424,102 +422,163 @@ class ImageClassificationViewController: UIViewController {
             // pick the best image index
             let bestImageIndex = sortedIndexes[0]
             let selectedIndexes = sortedIndexes[1...self.bestImagesLimit]
+            let allBestIndexes = sortedIndexes[0...self.bestImagesLimit]
             
             // Optimize Variety within best scored images
-            DispatchQueue.global(qos: .userInitiated).async {
+            DispatchQueue.global(qos: .userInitiated).async { [unowned self] in
                 
-                // loop over a number of shuffled indexes
-                for _ in 0..<self.varietySize{
+                
+                // print best category for each selected image
+                for i in allBestIndexes{
+                    let orientation = CGImagePropertyOrientation(self.images[i].imageOrientation)
+                    guard let ciImage = CIImage(image: self.images[i]) else { fatalError("Unable to create \(CIImage.self) from \(self.images[i]).") }
                     
-                    // reset the inception score
-                    self.classificationPredictions.removeAll()
-                    
-                    //shuffle N-1 elements  (RANDOM OPTIMIZATION)
-                    var shuffledIndexes = Array(selectedIndexes.shuffled()[0...self.shuffledImagesLimit])
-                    shuffledIndexes.append(bestImageIndex) //append the best image
-                    print(shuffledIndexes)
-                    
-                    // TODO: HILL CLIMBING
-                    
-                // Calculate Inception/MobileNet Score
-                    for i in shuffledIndexes{  //TODO replace with proper array of images
-                        let orientation = CGImagePropertyOrientation(self.images[i].imageOrientation)
-                        guard let ciImage = CIImage(image: self.images[i]) else { fatalError("Unable to create \(CIImage.self) from \(self.images[i]).") }
-                        
-                        let handler = VNImageRequestHandler(ciImage: ciImage, orientation: orientation)
-                        do {
-                            try handler.perform([self.InceptionClassificationRequest]) // then variety
-                        } catch {
-                            print("Failed to perform classification.\n\(error.localizedDescription)")
+                    let handler = VNImageRequestHandler(ciImage: ciImage, orientation: orientation)
+                    do {
+                        try handler.perform([self.InceptionClassificationRequest]) // then variety
+                    } catch {
+                        print("Failed to perform classification.\n\(error.localizedDescription)")
+                    }
+                    self.InceptionDict[i] = self.maxCategory
+                }
+                
+                // SELECT THE BEST SINGLE CLASSIFICATION RESULTS
+                
+                print(self.InceptionDict)
+                print(allBestIndexes)
+                
+                let categories = self.InceptionDict.values
+//                print(categories)
+                let uniqueCategories = Array(Set(categories))
+//                print(uniqueCategories)
+                
+                var categoryDict:Dictionary = [Int:Int]()
+                var categoryArray:Array = [String]()
+                categoryDict[allBestIndexes[0]] = 10000 // score for best image
+                categoryArray.append(self.InceptionDict[allBestIndexes[0]]!)
+                
+                for idx in selectedIndexes{
+//                    print(categoryDict)
+                    categoryDict[idx] = 1000
+                    for cat in categoryArray{
+//                        print(categoryArray)
+//                        print("new iteration")
+//                        print(cat)
+//                        print(self.InceptionDict[idx]!)
+                        if self.InceptionDict[idx]!.contains(cat) {
+                            categoryDict[idx]! = categoryDict[idx]! - 100
+//                            print(categoryDict[idx])
+                        }
+                        else
+                        {
+                            categoryArray.append(self.InceptionDict[idx]!)
+//                            break
                         }
                     }
-                    
-                    DispatchQueue.main.async { [unowned self] in
-                        self.progressLabel.text = "Optimizing variety..."
-                        self.counter += 8
-                    }
-                    
-                    // Calculate Score from Predictions
-                    let lastInceptionScore = inceptionScore(for: self.classificationPredictions, limit: self.limit)
-                    print(lastInceptionScore)
-                    if lastInceptionScore > self.bestInceptionScore {
-                        self.bestIndexVariety = shuffledIndexes
-                        self.bestInceptionScore = lastInceptionScore
-                    }
-                    
                 }
-//                print("Best variety: ", self.bestIndexVariety)
-//                print(self.bestInceptionScore)
-//                print("DONE!")
                 
+                print(categoryDict)
+                
+                let sortedCategoryArray = categoryDict.sorted { $0.1 > $1.1 }
+                
+                print(sortedCategoryArray[0].key)
+                
+                for i in 0..<5 {
+                    self.bestIndexVariety.append(sortedCategoryArray[i].key)
+                }
+                
+                
+//                // loop over a number of shuffled indexes
+//                for _ in 0..<self.varietySize{
+//
+//                    // reset the inception score
+//                    self.classificationPredictions.removeAll()
+//
+//                    //shuffle N-1 elements  (RANDOM OPTIMIZATION)
+//                    var shuffledIndexes = Array(selectedIndexes.shuffled()[0...self.shuffledImagesLimit])
+//                    shuffledIndexes.append(bestImageIndex) //append the best image
+//                    print(shuffledIndexes)
+//
+//                    // TODO: HILL CLIMBING
+//
+//                // Calculate Inception/MobileNet Score
+//                    for i in shuffledIndexes{  //TODO replace with proper array of images
+//                        let orientation = CGImagePropertyOrientation(self.images[i].imageOrientation)
+//                        guard let ciImage = CIImage(image: self.images[i]) else { fatalError("Unable to create \(CIImage.self) from \(self.images[i]).") }
+//
+//                        let handler = VNImageRequestHandler(ciImage: ciImage, orientation: orientation)
+//                        do {
+//                            try handler.perform([self.InceptionClassificationRequest]) // then variety
+//                        } catch {
+//                            print("Failed to perform classification.\n\(error.localizedDescription)")
+//                        }
+//                    }
+//
+//                    DispatchQueue.main.async { [unowned self] in
+//                        self.progressLabel.text = "Optimizing variety..."
+//                        self.counter += 8
+//                    }
+//
+//                    // Calculate Score from Predictions
+//                    let lastInceptionScore = inceptionScore(for: self.classificationPredictions, limit: self.limit)
+//                    print(lastInceptionScore)
+//                    if lastInceptionScore > self.bestInceptionScore {
+//                        self.bestIndexVariety = shuffledIndexes
+//                        self.bestInceptionScore = lastInceptionScore
+//                    }
+//
+//                }
+////                print("Best variety: ", self.bestIndexVariety)
+////                print(self.bestInceptionScore)
+////                print("DONE!")
+//
                 let end = CACurrentMediaTime()
-                
+//
                 let timeString = "Processed in " + String(roundToNearestQuarter(num: Float(end - self.start))) + " seconds"
-                print(timeString)
-                
+//                print(timeString)
+//
                 DispatchQueue.main.async { [unowned self] in
-                    
-                    print(self.images.count)
+
                     self.progressView.isHidden = true
                     self.progressLabel.isHidden = true
                     print("Here the best image!")
                     self.timeLabel.text = timeString
                     self.timeLabel.isHidden = false
-                    self.imageView.image = self.images[self.bestIndexVariety.last ?? 0]
-                    self.secondImageView.image = self.images[self.bestIndexVariety[0]]
-                    self.thirdImageView.image = self.images[self.bestIndexVariety[1]]
-                    self.fourthImageView.image = self.images[self.bestIndexVariety[2]]
-                    self.fifthImageView.image = self.images[self.bestIndexVariety[3]]
+                    self.imageView.image = self.images[self.bestIndexVariety[0]]
+                    self.secondImageView.image = self.images[self.bestIndexVariety[1]]
+                    self.thirdImageView.image = self.images[self.bestIndexVariety[2]]
+                    self.fourthImageView.image = self.images[self.bestIndexVariety[3]]
+                    self.fifthImageView.image = self.images[self.bestIndexVariety[4]]
                     self.firstWorstImageView.image = self.images[self.worstIndexes[0]]
                     self.secondWorstImageView.image = self.images[self.worstIndexes[1]]
-                    
-                    
+
+
                     // TODO add labels for A and T scores
                     self.makeLabel(label: self.aFirstImageLabel, vw: self.imageView, y:0)
                     self.makeText(label: self.aFirstImageLabel, value: self.aestheticalScoreDict[self.bestIndexVariety.last!], type: scoreType.AESTHETIC)
                     self.makeLabel(label: self.tFirstImageLabel, vw: self.imageView, y: 20)
                     self.makeText(label: self.tFirstImageLabel, value: self.technicalScoreDict[self.bestIndexVariety.last!], type: scoreType.TECHNICAL)
-                    
+
                     self.makeLabel(label: self.aSecondImageLabel, vw: self.secondImageView, y:0)
                     self.makeText(label: self.aSecondImageLabel, value: self.aestheticalScoreDict[self.bestIndexVariety[0]], type: scoreType.AESTHETIC)
                     self.makeLabel(label: self.tSecondImageLabel, vw: self.secondImageView, y: 20)
                     self.makeText(label: self.tSecondImageLabel, value: self.technicalScoreDict[self.bestIndexVariety[0]], type: scoreType.TECHNICAL)
-                    
+
                     self.makeLabel(label: self.aThirdImageLabel, vw: self.thirdImageView, y:0)
                     self.makeText(label: self.aThirdImageLabel, value: self.aestheticalScoreDict[self.bestIndexVariety[1]], type: scoreType.AESTHETIC)
                     self.makeLabel(label: self.tThirdImageLabel, vw: self.thirdImageView, y: 20)
                     self.makeText(label: self.tThirdImageLabel, value: self.technicalScoreDict[self.bestIndexVariety[1]], type: scoreType.TECHNICAL)
-                    
+
                     self.makeLabel(label: self.aFourthImageLabel, vw: self.fourthImageView, y:0)
                     self.makeText(label: self.aFourthImageLabel, value: self.aestheticalScoreDict[self.bestIndexVariety[2]], type: scoreType.AESTHETIC)
                     self.makeLabel(label: self.tFourthImageLabel, vw: self.fourthImageView, y: 20)
                     self.makeText(label: self.tFourthImageLabel, value: self.technicalScoreDict[self.bestIndexVariety[2]], type: scoreType.TECHNICAL)
-                    
+
                     self.makeLabel(label: self.aFifthImageLabel, vw: self.fifthImageView, y:0)
                     self.makeText(label: self.aFifthImageLabel, value: self.aestheticalScoreDict[self.bestIndexVariety[3]], type: scoreType.AESTHETIC)
                     self.makeLabel(label: self.tFifthImageLabel, vw: self.fifthImageView, y: 20)
                     self.makeText(label: self.tFifthImageLabel, value: self.technicalScoreDict[self.bestIndexVariety[3]], type: scoreType.TECHNICAL)
-                    
+
                     self.makeLabel(label: self.aFirstWorstImageLabel, vw: self.firstWorstImageView, y:0)
                     self.makeText(label: self.aFirstWorstImageLabel, value: self.aestheticalScoreDict[self.worstIndexes[0]], type: scoreType.AESTHETIC)
                     self.makeLabel(label: self.tFirstWorstImageLabel, vw: self.firstWorstImageView, y: 20)
@@ -530,8 +589,6 @@ class ImageClassificationViewController: UIViewController {
                     self.makeLabel(label: self.tSecondWorstImageLabel, vw: self.secondWorstImageView, y: 20)
                     self.makeText(label: self.tSecondWorstImageLabel, value: self.technicalScoreDict[self.worstIndexes[1]], type: scoreType.TECHNICAL)
 
-                    
-                    
                 }
             }
         }

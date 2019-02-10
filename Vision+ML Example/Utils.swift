@@ -61,7 +61,7 @@ func inceptionScore(for preds: [Float], limit: Int) -> Float{
         }
     }
 //    print(klSums)
-    var klMean = calculateMean(for: klSums)
+    let klMean = calculateMean(for: klSums)
 //    print(klMean)
     
     return exp(klMean)
@@ -90,12 +90,12 @@ func calculateMeanScore(for predictionsArray:MLMultiArray) -> Float{
     var sum:Double = 0.0
     var normalizedLabels = [Double]()
     for i in 0..<10 {
-        sum = sum + Double(predictionsArray[i])
+        sum = sum + Double(truncating: predictionsArray[i])
     }
     // weight
     var scoreSum:Double = 0.0
     for i in 0..<10 {
-        normalizedLabels.append((Double(predictionsArray[i]) / sum) * Double((i + 1)))
+        normalizedLabels.append((Double(truncating: predictionsArray[i]) / sum) * Double((i + 1)))
         scoreSum = scoreSum + normalizedLabels[i]
     }
     
